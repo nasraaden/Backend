@@ -7,7 +7,7 @@ exports.up = function (knex) {
             .unique()
             .notNullable();
         tbl
-            .string("email", 128)
+            .string("password", 128)
             .unique()
             .notNullable();
     })

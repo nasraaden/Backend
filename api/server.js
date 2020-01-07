@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 
+//local imports
+const userRouter = require("./routes/users/route.js");
 
 // middleware
 const authenicate = require('../auth/authenticate-middleware');
@@ -13,6 +15,9 @@ server.use(helmet());
 server.use(cors());
 server.use(logger);
 server.use(express.json());
+//routes
+server.use("/api/", userRouter);
+server.use('/docs', express.static('./docs'))
 
 
 //global middleware
