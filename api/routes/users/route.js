@@ -139,6 +139,7 @@ router.put("/users/:id", (req, res) => {
 function generateToken(user) {
     const payload = {
         username: user.username,
+        id: user.id
     };
     const options = {
         expiresIn: "1d",
