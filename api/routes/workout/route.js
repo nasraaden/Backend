@@ -45,6 +45,87 @@ router.post("/workouts", (req, res) => {
             })
     }
 })
+/**
+ * @api {get} /workouts
+ * @apiName GetAllWorkouts
+ * @apiGroup Workouts
+ * @apiSuccessExample {json} Success-Response-Example:
+ * HTTP/1.1 200 OK
+ * [
+ * {
+ *  "id": 1,
+ *  "user_id": 1,
+ *  "name": "benchpress",
+ *  "region": "chest",
+ *  "date": "1/8/2020",
+ *  "weight": 245,
+ *  "reps": 15
+ *  },
+ * {
+  *  "id": 2,
+  *  "user_id": 1,
+  *  "name": "squats",
+  *  "region": "legs",
+  *  "date": "1/8/2020",
+  *  "weight": 400,
+  *  "reps": 15
+ *  },
+ * {
+ *  "id": 3,
+ *  "user_id": 1,
+ *  "name": "latpulldown",
+ *  "region": "lats",
+ *  "date": "1/8/2020",
+ *  "weight": 215,
+ *  "reps": 15
+ *  }
+ * ]
+ */
+
+router.get("/workouts", restricted, (req, res) => {
+    Workout.findAll("workouts")
+        .select('id', 'user_id')
+        .then(workouts => {
+            res.status(200).json(workouts);
+        })
+        .catch(err => {
+            res.send(err)
+        })
+
+})
+
+/**
+ * @api {get} /workouts/:id
+ * @apiName GetWorkoutByWorkoutID
+ * @apiGroup Workouts
+ * @apiSuccessExample {json} Success-Response-Example:
+ * HTTP/1.1 200 OK
+ * {
+ * "id": 1,
+ * "user_id": 1,
+ * "reps": 100,
+ * "weight": 50,
+ * "date": "1/6/2020",
+ * "region": "biceps",
+ * "name": "curls"
+ * }
+ */
+
+router.get("/workouts/:id", (req, res) => {
+    const id = req.params.id;
+    Workout.findById(id)
+        .then(workout => {
+            if (workout) {
+                res.status(200).json(workout);
+            } else {
+                res.status(404).json({ message: "The specified workout cannot be found" })
+            }
+
+        })
+        .catch(err => {
+            res.status(500).json(err.message)
+        })
+})
 
 /**
  * @api {get} /users/:id/workouts
@@ -74,6 +155,55 @@ router.get("/users/:id/workouts", async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
+})
+
+/**
+ * @api {put} /workouts/:id
+ * @apiName UpdateWorkout
+ * @apiGroup Workouts
+ *
+ * @apiSuccessExample {json} Success-Response-Example:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Workout successfully updated"
+ *}
+ */
+
+router.put("/workouts/:id", (req, res) => {
+    const id = req.params.id;
+    const changes = req.body;
+    Workout.update(id, changes)
+        .then(changes => {
+            if (changes) {
+                res.status(200).json({ message: "Workout successfully updated" })
+            } else {
+                res.status(404).json({ message: "The specified workout does cannot be found" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json(err.message);
+        })
+})
+/**
+ * @api {del} /workouts/:id
+ * @apiName DeleteWorkout
+ * @apiGroup Workouts
+ * @apiSuccessExample {json} Success-Response-Example:
+ * HTTP/1.1 200 OK
+ * {
+ * "message": "Workout successfully deleted"
+ * }
+ */
+
+router.delete("/workouts/:id", (req, res) => {
+    const id = req.params.id;
+    Workout.remove(id)
+        .then(count => {
+            res.status(200).json({ message: "Workout successfully deleted" })
+        })
+        .catch(err => {
+            res.status(500).json(err.message)
+        })
 })
 
 module.exports = router;
