@@ -106,7 +106,18 @@ router.get("/users/:id", restricted, (req, res) => {
             res.status(500).json(err.message);
         })
 });
-
+/**
+ * @api {put} /users/:id
+ * @apiName EditUser
+ * @apiGroup Users
+ * @apiParam {String{...128}} username Can be changed
+ * @apiParam {String{...128}} password Can be changed
+ * @apiSuccesExample {json} Success-Response-Example: \
+ * HTTP/1.1 201 OK
+ * {
+ * "message": "User successfully updated"
+ * }
+ */
 
 router.put("/users/:id", (req, res) => {
     const id = req.params.id;

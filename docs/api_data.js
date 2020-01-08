@@ -1,5 +1,37 @@
 define({ "api": [
   {
+    "type": "put",
+    "url": "/users/:id",
+    "title": "",
+    "name": "EditUser",
+    "group": "Users",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "...128",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Can be changed</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "...128",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Can be changed</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/users/route.js",
+    "groupTitle": "Users"
+  },
+  {
     "type": "get",
     "url": "/api/users/:id",
     "title": "",
