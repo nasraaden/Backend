@@ -4,10 +4,13 @@ const jwt = require("jsonwebtoken")
 
 const Users = require("./model")
 const secrets = require("../../../database/config/secrets")
+const restricted = require("../../../auth/authenticate-middleware");
 
 
 /**
  * @api {post} /api/register
+ * @apiName RegisterUser
+ * @apiGroup Users
  * @apiParam {String{...128}} username Username must be unique
  * @apiParam {String{...128}} password Cannont be Null
  *
@@ -40,6 +43,8 @@ router.post("/register", (req, res) => {
 
 /**
  * @api {post} /api/login
+ * @apiName Login
+ * @apiGroup Users
  * @apiParam {String{...128}} username Username must exist in the database
  * @apiParam {String{...128}} password Password must match in the database
  *
@@ -70,6 +75,55 @@ router.post("/login", (req, res) => {
             res.status(500).json(error)
         });
 })
+
+
+/**
+ * @api {get} /api/users/:id
+ * @apiName GetUserById
+ * @apiGroup Users
+ *
+ * @apiSuccessExample {json} Success-Response-Example:
+ *  HTTP/1.1 200 Success
+ * {
+ * "id": 1,
+ * "username": "admin1",
+ * "password": "$2a$08$PtMQQMQe7uhe/OVkydT39.9dZK3uLBsNXwuIIcfD5a/jjKXCklPO6"
+ * }
+ */
+
+
+router.get("/users/:id", restricted, (req, res) => {
+    let id = req.params.id;
+    Users.findById(id)
+        .then(user => {
+            if (user) {
+                res.status(200).json(user)
+            } else {
+                res.status(400).json({ message: "The specified user does not exist" });
+            }
+        })
+        .catch(err => {
+            res.status(500).json(err.message);
+        })
+});
+
+
+router.put("/users/:id", (req, res) => {
+    const id = req.params.id;
+    const changes = req.body;
+
+    Users.update(id, changes)
+        .then(changes => {
+            if (changes) {
+                res.status(200).json({ message: "User successfully updated" });
+            } else {
+                res.status(404).json({ message: "The specified user does not exist" });
+            }
+        })
+        .catch(err => {
+            res.status(500).json(err.message);
+        })
+});
 
 function generateToken(user) {
     const payload = {
