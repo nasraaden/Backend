@@ -4,6 +4,7 @@ const helmet = require('helmet');
 
 //local imports
 const userRouter = require("./routes/users/route.js");
+const workoutRouter = require("./routes/workout/route")
 
 // middleware
 const authenicate = require('../auth/authenticate-middleware');
@@ -17,6 +18,7 @@ server.use(logger);
 server.use(express.json());
 //routes
 server.use("/api/", userRouter);
+server.use("/api", workoutRouter)
 server.use('/docs', express.static('./docs'))
 
 
