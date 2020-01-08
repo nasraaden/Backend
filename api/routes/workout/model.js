@@ -11,7 +11,7 @@ module.exports = {
 
 function findAll() {
     return db("workouts")
-        .seleect(
+        .select(
             "id",
             "user_id",
             "name",

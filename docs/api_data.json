@@ -171,6 +171,63 @@
     "groupTitle": "Workouts"
   },
   {
+    "type": "del",
+    "url": "/workouts/:id",
+    "title": "",
+    "name": "DeleteWorkout",
+    "group": "Workouts",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response-Example:",
+          "content": "HTTP/1.1 200 OK\n{\n\"message\": \"Workout successfully deleted\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/workout/route.js",
+    "groupTitle": "Workouts"
+  },
+  {
+    "type": "get",
+    "url": "/workouts",
+    "title": "",
+    "name": "GetAllWorkouts",
+    "group": "Workouts",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response-Example:",
+          "content": "HTTP/1.1 200 OK\n[\n{\n \"id\": 1,\n \"user_id\": 1,\n \"name\": \"benchpress\",\n \"region\": \"chest\",\n \"date\": \"1/8/2020\",\n \"weight\": 245,\n \"reps\": 15\n },\n{\n \"id\": 2,\n \"user_id\": 1,\n \"name\": \"squats\",\n \"region\": \"legs\",\n \"date\": \"1/8/2020\",\n \"weight\": 400,\n \"reps\": 15\n },\n{\n \"id\": 3,\n \"user_id\": 1,\n \"name\": \"latpulldown\",\n \"region\": \"lats\",\n \"date\": \"1/8/2020\",\n \"weight\": 215,\n \"reps\": 15\n }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/workout/route.js",
+    "groupTitle": "Workouts"
+  },
+  {
+    "type": "get",
+    "url": "/workouts/:id",
+    "title": "",
+    "name": "GetWorkoutByWorkoutID",
+    "group": "Workouts",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response-Example:",
+          "content": "HTTP/1.1 200 OK\n{\n\"id\": 1,\n\"user_id\": 1,\n\"reps\": 100,\n\"weight\": 50,\n\"date\": \"1/6/2020\",\n\"region\": \"biceps\",\n\"name\": \"curls\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/workout/route.js",
+    "groupTitle": "Workouts"
+  },
+  {
     "type": "get",
     "url": "/users/:id/workouts",
     "title": "",
@@ -181,6 +238,25 @@
         {
           "title": "Success-Response-Example:",
           "content": "HTTP/1.1 200 OK\n[\n{\n \"username\": \"admin1\",\n\"id\": 1,\n\"name\": \"curls\",\n\"region\": \"biceps\",\n\"date\": \"1/6/2020\",\n\"weight\": 50,\n\"reps\": 20\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/workout/route.js",
+    "groupTitle": "Workouts"
+  },
+  {
+    "type": "put",
+    "url": "/workouts/:id",
+    "title": "",
+    "name": "UpdateWorkout",
+    "group": "Workouts",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response-Example:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Workout successfully updated\"\n}",
           "type": "json"
         }
       ]
