@@ -4,6 +4,11 @@ const request = require("supertest")
 
 describe("workouts", () => {
 
+    describe('TESTING ENVIRONMENT', () => {
+        it('should set env to testing', () => {
+            expect(process.env.DB_ENV).toBe('testing');
+        });
+    })
     let workoutid;
     it("post", async () => {
         const res = await request(server).post("/api/workouts")
