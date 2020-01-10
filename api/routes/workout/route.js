@@ -199,7 +199,7 @@ router.delete("/workouts/:id", (req, res) => {
     const id = req.params.id;
     Workout.remove(id)
         .then(count => {
-            res.status(200).json({ message: "Workout successfully deleted" })
+            res.status(204).json({ message: "Workout successfully deleted" })
         })
         .catch(err => {
             res.status(500).json(err.message)
