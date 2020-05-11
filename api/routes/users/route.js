@@ -1,150 +1,159 @@
-const router = require("express").Router();
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
+const router = require('express').Router();
+const jwt = require('jsonwebtoken');
 
-const Users = require("./model")
-const secrets = require("../../../database/config/secrets")
-const restricted = require("../../../auth/authenticate-middleware");
+const Users = require('./model');
 
+const restricted = require('../../../auth/authenticate-middleware');
 
-/**
- * @api {post} /api/register
- * @apiName RegisterUser
- * @apiGroup Users
- * @apiParam {String{...128}} username Username must be unique
- * @apiParam {String{...128}} password Cannont be Null
- *
- * @apiSuccessExample {json} Success-Response-Example:
- * HTTP/1.1 201 Created
- *  {
- *  "id": 2,
- * "username": "admin1",
- * "password": "$2a$08$bZjiTjG1taKufx5s6JuJ8.jm63qoM2dXlk22a9dOPW/Bt8xtWLm9m"
- *   }
- */
+const {
+  validateUserId,
+  validateWorkoutData,
+  validateWorkoutId,
+} = require('../../../middleware/all-middleware.js');
 
-
-
-router.post("/register", (req, res) => {
-    let user = req.body;
-    const hash = bcrypt.hashSync(user.password, 8)
-    user.password = hash;
-
-    Users.add(user)
-        .then(saved => {
-            res.status(201).json(saved);
-        })
-        .catch(error => {
-            console.log(error)
-            res.status(500).json(error);
-        })
+// GET ALL USERS
+router.get('/', restricted, (req, res) => {
+  Users.findAll()
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: 'Error getting all users.',
+      });
+    });
 });
 
-
-/**
- * @api {post} /api/login
- * @apiName Login
- * @apiGroup Users
- * @apiParam {String{...128}} username Username must exist in the database
- * @apiParam {String{...128}} password Password must match in the database
- *
- * @apiSuccessExample {json} Success-Response-Example:
- *   HTTP/1.1 200 Success
- *   {
- *   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMSIsImlhdCI6MTU3ODQwOTg1OCwiZXhwIjoxNTc4NDk2MjU4fQ.NIWZvQiWC1ux1991ZC58SgRxum9GAWuFByORv-2FKoE"
-*   }
- */
-
-
-
-router.post("/login", (req, res) => {
-    let { username, password } = req.body
-
-    Users.findBy({ username })
-        .first()
-        .then(user => {
-            if (user && bcrypt.compareSync(password, user.password)) {
-                const token = generateToken(user);
-                res.status(200).json({ token });
-            } else {
-                res.status(401).json({ message: "Invalid Credentials" })
-            }
-        })
-        .catch(error => {
-            console.log(error)
-            res.status(500).json(error)
-        });
-})
-
-
-/**
- * @api {get} /api/users/:id
- * @apiName GetUserById
- * @apiGroup Users
- *
- * @apiSuccessExample {json} Success-Response-Example:
- *  HTTP/1.1 200 Success
- * {
- * "id": 1,
- * "username": "admin1",
- * "password": "$2a$08$PtMQQMQe7uhe/OVkydT39.9dZK3uLBsNXwuIIcfD5a/jjKXCklPO6"
- * }
- */
-
-
-router.get("/users/:id", restricted, (req, res) => {
-    let id = req.params.id;
-    Users.findById(id)
-        .then(user => {
-            if (user) {
-                res.status(200).json(user)
-            } else {
-                res.status(400).json({ message: "The specified user does not exist" });
-            }
-        })
-        .catch(err => {
-            res.status(500).json(err.message);
-        })
+// GET USER BY ID
+router.get('/:uid', validateUserId, (req, res) => {
+  const { uid } = req.params;
+  Users.findById(uid)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
 });
-/**
- * @api {put} /users/:id
- * @apiName EditUser
- * @apiGroup Users
- * @apiParam {String{...128}} username Can be changed
- * @apiParam {String{...128}} password Can be changed
- * @apiSuccesExample {json} Success-Response-Example: \
- * HTTP/1.1 201 OK
- * {
- * "message": "User successfully updated"
- * }
- */
 
-router.put("/users/:id", (req, res) => {
-    const id = req.params.id;
+// EDIT USER
+router.put('/:uid', validateUserId, (req, res) => {
+  const { uid } = req.params;
+  const changes = req.body;
+
+  Users.update(uid, changes)
+    .then((changes) => {
+      if (changes) {
+        res.status(200).json({ message: 'User successfully updated' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
+});
+
+// DELETE USER
+router.delete('/:uid', validateUserId, (req, res) => {
+  const { uid } = req.params;
+
+  Users.remove(uid)
+    .then((user) => {
+      res.status(200).json({ message: 'User successfully deleted' });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err.message);
+    });
+});
+// -------------------------------------------------------------------------
+// WORKOUR ENDPOINTS
+
+// GET ALL WORKOUTS BY USER
+router.get('/:uid/workouts', validateUserId, (req, res) => {
+  const { uid } = req.params;
+  Users.findUserWorkouts(uid)
+    .then((workouts) => {
+      res.status(200).json(workouts);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: 'Error getting all workouts.' });
+    });
+});
+
+// GET SINGLE WORKOUT BY ID
+router.get(
+  '/:uid/workouts/:wid',
+  validateUserId,
+  validateWorkoutId,
+  (req, res) => {
+    const { wid } = req.params;
+    Users.findUserWorkoutsById(wid)
+      .then((workout) => {
+        res.status(200).json(workout);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ error: 'Error getting single user workout.' });
+      });
+  }
+);
+
+// ADD WORKOUT
+router.post(
+  '/:uid/add-workout',
+  validateUserId,
+  validateWorkoutData,
+  (req, res) => {
+    const { uid } = req.params;
+    let newWorkout = req.body;
+    newWorkout = { ...newWorkout, user_id: uid };
+
+    Users.addWorkout(newWorkout)
+      .then((workout) => {
+        res.status(201).json(workout);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err.message);
+      });
+  }
+);
+// EDIT WORKOUT
+router.put(
+  '/:uid/workouts/:uid',
+  validateUserId,
+  validateWorkoutId,
+  (req, res) => {
+    const { wid } = req.params;
     const changes = req.body;
+    Users.updateWorkout(wid, changes)
+      .then((changes) => {
+        res.status(200).json(changes);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err.message);
+      });
+  }
+);
 
-    Users.update(id, changes)
-        .then(changes => {
-            if (changes) {
-                res.status(200).json({ message: "User successfully updated" });
-            } else {
-                res.status(404).json({ message: "The specified user does not exist" });
-            }
-        })
-        .catch(err => {
-            res.status(500).json(err.message);
-        })
-});
-
-function generateToken(user) {
-    const payload = {
-        username: user.username,
-        id: user.id
-    };
-    const options = {
-        expiresIn: "1d",
-    };
-    return jwt.sign(payload, secrets.jwtSecret, options);
-}
+// DELETE WORKOUT
+router.delete(
+  '/:uid/workouts/:wid',
+  validateUserId,
+  validateWorkoutId,
+  (req, res) => {
+    const { wid } = req.params;
+    Users.removeWorkout(wid)
+      .then((deleted) => {
+        res.status(200).json(deleted);
+      })
+      .catch((err) => {
+        res.status(500).json(err.message);
+      });
+  }
+);
 
 module.exports = router;

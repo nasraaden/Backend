@@ -1,54 +1,42 @@
+require('dotenv').config();
 
 module.exports = {
-
   development: {
-    client: 'sqlite3',
+    client: 'pg',
     useNullAsDefault: true,
-    connection: {
-      filename: './database/weightlifting.db3'
-    },
+    connection: process.env.DB_DEV,
     migrations: {
-      directory: "./database/migrations"
+      directory: './database/migrations',
     },
     seeds: {
-      directory: "./database/seeds"
+      directory: './database/seeds',
     },
-    pool: {
-      afterCreate: (conn, done) => {
-        conn.run("PRAGMA foreign_keys = ON", done)
-      }
-    },
-
   },
 
-
   testing: {
-    client: "sqlite3",
+    client: 'pg',
     useNullAsDefault: true,
-    connection: {
-      filename: "./database/test.db3"
-    },
+    connection: process.env.DB_TEST,
     migrations: {
-      directory: "./database/migrations",
-      tableName: "knex_migrations"
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
     },
     seeds: {
-      directory: "./database/seeds"
-    }
+      directory: './database/seeds',
+    },
   },
 
   production: {
-    client: "pg",
+    client: 'pg',
     useNullAsDefault: true,
     connection: process.env.DATABASE_URL,
 
     migrations: {
-      directory: "./database/migrations",
-      tableName: "knex_migrations"
+      directory: './database/migrations',
+      tableName: 'knex_migrations',
     },
     seeds: {
-      directory: "./database/seeds"
-    }
-  }
-
+      directory: './database/seeds',
+    },
+  },
 };
