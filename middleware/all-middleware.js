@@ -29,7 +29,6 @@ function validateUserId(req, res, next) {
       if (user.length > 0) {
         next();
       } else {
-        console.log(user);
         res.status(404).json({
           message: 'The user with the specified ID does not exist.',
         });
@@ -75,7 +74,7 @@ function validateWorkoutId(req, res, next) {
         });
       }
     })
-    .catch((erorr) => {
+    .catch((err) => {
       res.status(500).json({
         errorMessage:
           'Could not validate workout information for the specified ID',

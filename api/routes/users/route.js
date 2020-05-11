@@ -122,7 +122,7 @@ router.post(
 );
 // EDIT WORKOUT
 router.put(
-  '/:uid/workouts/:uid',
+  '/:uid/workouts/:wid',
   validateUserId,
   validateWorkoutId,
   (req, res) => {
