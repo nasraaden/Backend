@@ -13,7 +13,7 @@ exports.up = function (knex) {
     tbl.string('region', 128);
     tbl.integer('reps');
     tbl.integer('weight');
-    tbl.string('date', 9);
+    tbl.string('date');
   });
 };
 

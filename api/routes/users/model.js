@@ -101,8 +101,8 @@ function findUserWorkoutsById(wid) {
       'w.weight',
       'w.reps'
     )
-    .where('w.id', wid)
-    .join('users as u', 'w.user_id', 'u.id');
+    .join('users as u', 'w.user_id', 'u.id')
+    .where('w.id', wid);
 }
 
 // ADD USER WORKOUT
