@@ -78,7 +78,8 @@ function findUserWorkouts(uid) {
       'w.region',
       'w.date',
       'w.weight',
-      'w.reps'
+      'w.reps',
+      'w.description'
     )
     .where('w.user_id', uid)
     .join('users as u', 'w.user_id', 'u.id');
@@ -99,7 +100,8 @@ function findUserWorkoutsById(wid) {
       'w.region',
       'w.date',
       'w.weight',
-      'w.reps'
+      'w.reps',
+      'w.description'
     )
     .join('users as u', 'w.user_id', 'u.id')
     .where('w.id', wid);
