@@ -19,8 +19,7 @@ server.use(express.json());
 
 // Routes
 server.use('/api/auth', authRouter);
-server.use('/api/users', userRouter);
-server.use('/api/workouts', workoutRouter);
+server.use('/api/users', authenticate, userRouter);
 server.use('/docs', express.static('./docs'));
 
 //global middleware
