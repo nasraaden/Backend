@@ -5,7 +5,6 @@ const helmet = require('helmet');
 //local imports
 const authRouter = require('./routes/users/auth-router.js');
 const userRouter = require('./routes/users/route.js');
-const workoutRouter = require('./routes/workout/route');
 
 // middleware
 const authenticate = require('../auth/authenticate-middleware');
