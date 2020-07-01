@@ -14,6 +14,7 @@ exports.up = function (knex) {
     tbl.integer('reps');
     tbl.integer('weight');
     tbl.string('date');
+    tbl.string('description', 1200);
   });
 };
 
