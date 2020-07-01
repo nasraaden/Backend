@@ -13,13 +13,12 @@ router.post('/register', validateUserData, (req, res) => {
   user.password = hash;
 
   Users.add(user)
-    .then((saved) => {
-      const token = generateToken(user);
-      const { id, username } = user;
+    .then((newUser) => {
+      const token = generateToken(newUser);
+      const { id, username } = newUser;
       res.status(201).json({ id, username, token });
     })
     .catch((error) => {
-      console.log(error);
       res.status(500).json(error);
     });
 });
@@ -35,11 +34,12 @@ router.post('/login', validateUserData, (req, res) => {
         const { id, username } = user;
         res.status(200).json({ id, username, token });
       } else {
-        res.status(401).json({ message: 'Invalid Credentials' });
+        res
+          .status(401)
+          .json({ message: 'Invalid Credentials, Not Authorized ' });
       }
     })
     .catch((error) => {
-      console.log(error);
       res.status(500).json(error);
     });
 });
