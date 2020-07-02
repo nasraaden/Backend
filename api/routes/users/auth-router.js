@@ -19,6 +19,7 @@ router.post('/register', validateUserData, (req, res) => {
       res.status(201).json({ id, username, token });
     })
     .catch((error) => {
+      console.log(error);
       res.status(500).json(error);
     });
 });
@@ -40,6 +41,7 @@ router.post('/login', validateUserData, (req, res) => {
       }
     })
     .catch((error) => {
+      console.log(error);
       res.status(500).json(error);
     });
 });
