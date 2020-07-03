@@ -30,7 +30,6 @@ module.exports = {
     client: 'pg',
     useNullAsDefault: true,
     connection: process.env.DATABASE_URL,
-
     migrations: {
       directory: './database/migrations',
       tableName: 'knex_migrations',
