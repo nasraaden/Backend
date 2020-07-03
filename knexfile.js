@@ -29,7 +29,7 @@ module.exports = {
   production: {
     client: 'pg',
     useNullAsDefault: true,
-    connection: process.env.DATABASE_URL,
+    connection: process.env.HEROKU_POSTGRESQL_BLUE_URL,
     migrations: {
       directory: './database/migrations',
       tableName: 'knex_migrations',
