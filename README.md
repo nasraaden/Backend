@@ -15,7 +15,7 @@
 | POST   | `/auth/login`    | all users      | Login with a registered account. |
 
 
-#### Users Routes
+### Users Routes
 
 | Method | Endpoint                        | Access Control | Description                           |
 | ------ | ------------------------------- | -------------- | ------------------------------------- |
